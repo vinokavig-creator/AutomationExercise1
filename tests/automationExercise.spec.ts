@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 import { ProductsPage } from '../pages/ProductsPage';
+import { productData } from '../testData/productData';
 
 test('Register user and validate products', async ({ page }) => {
 
@@ -32,13 +33,13 @@ test('Register user and validate products', async ({ page }) => {
 
     await productsPage.goToProducts();
 
-    await productsPage.searchProduct('Jeans');
+    await productsPage.searchProduct(productData.validSearchProduct);
 
-    await productsPage.verifySearchResultsContain('Jeans');
+    await productsPage.verifySearchResultsContain(productData.validSearchProduct);
 
     await loginPage.closePopupIfPresent();
 
-    await productsPage.searchProduct('xyz_nonexistent_999');
+    await productsPage.searchProduct(productData.invalidSearchProduct);
 
     await productsPage.verifyNoResults();
 

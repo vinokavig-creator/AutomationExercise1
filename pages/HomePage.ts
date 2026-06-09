@@ -1,26 +1,45 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, Locator } from '@playwright/test';
+import { BasePage } from './BasePage';
 
-export class HomePage {
+export class HomePage extends BasePage {
 
-    constructor(private page: Page) {}
+    private logo: Locator;
+    private productsLink: Locator;
+    private signupLoginLink: Locator;
+
+    constructor(page: Page) {
+        super(page);
+
+        this.logo = page.locator(
+            'img[alt="Website for automation practice"]'
+        );
+
+        this.productsLink = page.locator(
+            'a[href="/products"]'
+        );
+
+        this.signupLoginLink = page.getByRole('link', {
+            name: 'Signup / Login'
+        });
+    }
 
     async navigate() {
-        await this.page.goto('https://automationexercise.com');
+        await this.page.goto('/');
     }
 
     async verifyHomePage() {
-        await expect(
-            this.page.locator('img[alt="Website for automation practice"]')
-        ).toBeVisible();
 
-        await expect(
-            this.page.locator('a[href="/products"]')
-        ).toBeVisible();
+        await expect(this.logo)
+            .toBeVisible();
+
+        await expect(this.productsLink)
+            .toBeVisible();
     }
 
     async clickSignupLogin() {
-        await this.page.getByRole('link', {
-            name: 'Signup / Login'
-        }).click();
+
+        await this.click(
+            this.signupLoginLink
+        );
     }
 }
