@@ -260,4 +260,56 @@ export class ProductsPage extends BasePage {
         ).toBeVisible();
     }
 
+async openProductInNewTab(): Promise<Page> {
+
+    const productLink =
+        this.page.locator('a[href*="product_details"]').first();
+
+
+    await productLink.waitFor({
+        state: 'visible'
+    });
+
+
+    const href =
+        await productLink.getAttribute('href');
+
+
+    const newPage =
+        await this.page.context().newPage();
+
+
+    await newPage.goto(
+        'https://automationexercise.com' + href
+    );
+
+
+    await newPage.waitForLoadState('domcontentloaded');
+
+
+    return newPage;
+
+}
+
+
+
+async getNewTabProductTitle(newPage: Page) {
+
+    const title =
+        await newPage
+            .locator('.product-information h2')
+            .innerText();
+
+    return title.trim();
+}
+
+
+
+async validateOriginalPage() {
+
+    await expect(this.page)
+        .toHaveURL(/products/);
+
+}
+
 }

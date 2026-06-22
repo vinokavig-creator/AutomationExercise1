@@ -170,3 +170,51 @@ test('Validate product price between search, PDP and cart', async ({ page }) => 
     );
 
 });
+
+// NEW TEST - Validate new tab workflow
+
+test('Validate product in new tab', async ({ page }) => {
+
+    const homePage = new HomePage(page);
+    const productsPage = new ProductsPage(page);
+
+
+    await homePage.navigate();
+
+    await productsPage.goToProducts();
+
+
+    await productsPage.searchProduct(
+        productData.validSearchProduct
+    );
+
+
+    const productTab =
+        await productsPage.openProductInNewTab();
+
+
+    const productTitle =
+        await productsPage.getNewTabProductTitle(productTab);
+
+
+    console.log(
+        'New Tab Product:',
+        productTitle
+    );
+
+
+    expect(productTitle)
+        .toContain(
+            productData.validSearchProduct
+        );
+
+
+    await productTab.close();
+
+
+    await page.bringToFront();
+
+
+    await productsPage.validateOriginalPage();
+
+});
